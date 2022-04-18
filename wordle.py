@@ -42,12 +42,12 @@ class Wordle(object):
                 for index in reversed(range(0, len(self.word_list))):
                     pattern = self.make_five_letter_pattern_string(letter, position)
 
-                    # Remove word if the valid letter doesn't exist in the word at all
-                    if re.search(letter, self.word_list[index]) is None:
+                    # Remove word if the valid letter doesn't exist in the word at all or exists in an invalid location
+                    if re.search(letter, self.word_list[index]) is None \
+                        or re.search(pattern, self.word_list[index]) is not None \
+                        and pattern != ".....":
                         self.word_list.remove(self.word_list[index])
-                    # Remove word if the valid letter exists in an invalid location
-                    elif re.search(pattern, self.word_list[index]) is not None and pattern != ".....":
-                        self.word_list.remove(self.word_list[index])
+
 
     def remove_invalid_letters(self):
         for index in reversed(range(0, len(self.word_list))):
