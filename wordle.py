@@ -20,8 +20,9 @@ class Wordle(object):
             self.bad_letters.append(letter)
 
     def add_good_letters(self, letter_dictionary):
-        for position, letter in letter_dictionary.items():
-            self.good_letters[position].append(letter)
+        for position, letters in letter_dictionary.items():
+            for letter in letters:
+                self.good_letters[position].append(letter)
 
     def add_known_letters(self, letter_dictionary):
         for position, letter in letter_dictionary.items():
