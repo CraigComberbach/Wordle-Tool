@@ -75,4 +75,7 @@ class Wordle(object):
         # print(f"Remove Invalid Letters ({len(self.word_list)})\t{self.word_list}")
 
     def __str__(self):
-        return f"{len(self.word_list):4d} - {self.word_list}"
+        return f"{self.word_list}"
+
+    def __len__(self):
+        return len(self.word_list)
