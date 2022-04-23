@@ -48,7 +48,6 @@ class Wordle(object):
                         and pattern != ".....":
                         self.word_list.remove(self.word_list[index])
 
-
     def remove_invalid_letters(self):
         for index in reversed(range(0, len(self.word_list))):
             for letter in self.bad_letters:
@@ -66,13 +65,9 @@ class Wordle(object):
         return pattern_string
 
     def solve(self):
-        # print(f"Initial Word List ({len(self.word_list)})\t{self.word_list}")
         self.must_have_letter_at_specific_location()
-        # print(f"Known Letters Only ({len(self.word_list)})\t{self.word_list}")
         self.only_include_valid_letters()
-        # print(f"Valid Letters Only ({len(self.word_list)})\t\t{self.word_list}")
         self.remove_invalid_letters()
-        # print(f"Remove Invalid Letters ({len(self.word_list)})\t{self.word_list}")
 
     def __str__(self):
         return f"{self.word_list}"
