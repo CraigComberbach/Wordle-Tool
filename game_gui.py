@@ -51,7 +51,10 @@ class Game_Space(object):
     def __init__(self, frame):
         self.frame = frame
         self.game = Wordle()
+        self.guess_text = tk.StringVar()
+        self.guess_text.trace_add("write", lambda unused1, unused2, unused3: self.update_buttons(self.guess_text))
         self.guess_entry = ttk.Entry(master = self.frame,
+                                     textvariable = self.guess_text,
                                      width = 11)
         self.buttons_frame = ttk.Frame(master = self.frame)
         self.solve_button = ttk.Button(master = self.frame,
@@ -73,7 +76,8 @@ class Game_Space(object):
 
             self.position_button.append(ttk.Button(master = self.buttons_frame,
                                                    text = "-",
-                                                   command = button_action).grid(column=position, row=3))
+                                                   command = button_action))
+            self.position_button[position].grid(column=position, row=3)
 
     def multi_clicker(self, position):
         pass
@@ -83,3 +87,16 @@ class Game_Space(object):
         self.answer_box["state"] = tk.NORMAL
         self.answer_box.insert(tk.END, f"Words = {len(self.game)}\n{self.game}")
         self.answer_box["state"] = tk.DISABLED
+
+    def update_buttons(self, textable):
+        content = self.limit_text_length(self.guess_entry, textable, 5)
+        for index in range(len(self.position_button)):
+            if index < len(content):
+                self.position_button[index]["text"] = content[index]
+            else:
+                self.position_button[index]["text"] = ""
+
+    def limit_text_length(self, widget, text, length = 5):
+        while len(text.get()) > length:
+            widget.delete(0)
+        return text.get()
