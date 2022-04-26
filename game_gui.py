@@ -74,13 +74,22 @@ class Game_Space(object):
             def button_action(number = position):
                 return self.multi_clicker(number)
 
-            self.position_button.append(ttk.Button(master = self.buttons_frame,
-                                                   text = "-",
-                                                   command = button_action))
-            self.position_button[position].grid(column=position, row=3)
+            self.position_button.append(tk.Button(master = self.buttons_frame,
+                                                  relief = "groove",
+                                                  fg = 'black',
+                                                  bg = 'light gray',
+                                                  width = 5,
+                                                  text = "-",
+                                                  command = button_action))
+            self.position_button[position].grid(column = position, row = 0)
 
     def multi_clicker(self, position):
-        pass
+        if self.position_button[position]["background"] == "light gray":
+            self.position_button[position]["background"] = "yellow"
+        elif self.position_button[position]["background"] == "yellow":
+            self.position_button[position]["background"] = "green"
+        elif self.position_button[position]["background"] == "green":
+            self.position_button[position]["background"] = "light gray"
 
     def solve_button(self):
         self.game.solve()
