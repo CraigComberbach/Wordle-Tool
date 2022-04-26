@@ -60,7 +60,7 @@ class Game_Space(object):
         self.buttons_frame = ttk.Frame(master = self.frame)
         self.solve_button = ttk.Button(master = self.frame,
                                        text = "Solve",
-                                       command = self.solve_button)
+                                       command = self.solve_puzzle)
         self.answer_box = tk.Text(master = self.frame,
                                   wrap = tk.NONE,
                                   width = 19,
@@ -92,11 +92,31 @@ class Game_Space(object):
         elif self.position_button[position]["background"] == "green":
             self.position_button[position]["background"] = "light gray"
 
-    def solve_button(self):
+    def solve_puzzle(self):
+        bad_letters = ""
+        good_letters = {}
+        known_letters = {}
+        for index in range(len(self.position_button)):
+            if self.position_button[index]["background"] == "light gray":
+                bad_letters +=  self.position_button[index]["text"]
+            elif self.position_button[index]["background"] == "yellow":
+                good_letters[index] =  self.position_button[index]["text"]
+            else:
+                known_letters[index] =  self.position_button[index]["text"]
+            self.position_button[index]["background"] = "light gray"
+
+        self.game.add_bad_letters(bad_letters)
+        self.game.add_good_letters(good_letters)
+        self.game.add_known_letters(known_letters)
         self.game.solve()
+
         self.answer_box["state"] = tk.NORMAL
+        self.answer_box.delete("1.0", tk.END)
         self.answer_box.insert(tk.END, f"Words = {len(self.game)}\n{self.game}")
         self.answer_box["state"] = tk.DISABLED
+
+        self.guess_entry.delete(0, tk.END)
+        self.guess_entry.focus()
 
     def update_buttons(self, textable):
         content = self.limit_text_length(self.guess_entry, textable, 5)
