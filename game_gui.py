@@ -55,14 +55,15 @@ class Game_Space(object):
         self.guess_text.trace_add("write", lambda unused1, unused2, unused3: self.update_buttons(self.guess_text))
         self.guess_entry = ttk.Entry(master = self.frame,
                                      textvariable = self.guess_text,
-                                     width = 11)
+                                     justify = "center",
+                                     width = 7)
         self.buttons_frame = ttk.Frame(master = self.frame)
         self.solve_button = ttk.Button(master = self.frame,
                                        text = "Solve",
                                        command = self.solve_button)
         self.answer_box = tk.Text(master = self.frame,
                                   wrap = tk.NONE,
-                                  width = 20,
+                                  width = 19,
                                   height = 2)
         self.guess_entry.pack()
         self.buttons_frame.pack()
@@ -78,7 +79,7 @@ class Game_Space(object):
                                                   relief = "groove",
                                                   fg = 'black',
                                                   bg = 'light gray',
-                                                  width = 5,
+                                                  width = 3,
                                                   text = "-",
                                                   command = button_action))
             self.position_button[position].grid(column = position, row = 0)
