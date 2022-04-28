@@ -64,7 +64,23 @@ class Wordle(object):
             pattern_string += "."
         return pattern_string
 
+    def ensure_letter_integrity(self):
+        # Reduce bad letters to only have unique letter to reduce redundancy
+        self.bad_letters = list(set(self.bad_letters))
+
+        # I am putting a greater weight on a good/known letter over a bad letter
+        # The online game will mark a repeated good letter as a bad letter
+        # eg woods will mark the first 'o' as good and the second 'o' as bad
+        for position, letter in self.good_letters.items():
+            if letter in self.bad_letters:
+                self.bad_letters.remove(letter)
+
+        for position, letter in self.known_letters.items():
+            if letter in self.bad_letters:
+                self.bad_letters.remove(letter)
+
     def solve(self):
+        self.ensure_letter_integrity()
         self.must_have_letter_at_specific_location()
         self.only_include_valid_letters()
         self.remove_invalid_letters()
