@@ -45,7 +45,7 @@ class Wordle(object):
                     # Remove word if the valid letter doesn't exist in the word at all or exists in an invalid location
                     if re.search(letter, self.word_list[index]) is None \
                         or re.search(pattern, self.word_list[index]) is not None \
-                        and pattern != ".....":
+                        and pattern != "....":
                         self.word_list.pop(index)
 
     def remove_invalid_letters(self):
