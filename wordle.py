@@ -76,9 +76,9 @@ class Wordle(object):
 
     def solve(self):
         self.ensure_letter_integrity()
-        self.must_have_letter_at_specific_location()
-        self.only_include_valid_letters()
         self.remove_invalid_letters()
+        self.only_include_valid_letters()
+        self.must_have_letter_at_specific_location()
 
     def __str__(self):
         return f"{self.word_list}"
