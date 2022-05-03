@@ -56,13 +56,8 @@ class Wordle(object):
                     break
 
     def make_five_letter_pattern_string(self, letter, index):
-        pattern_string = ""
-        for position in range(index):
-            pattern_string += "."
-        pattern_string += letter
-        for position in range(5 - len(pattern_string)):
-            pattern_string += "."
-        return pattern_string
+        pattern = "....."
+        return pattern[:index] + letter + pattern[index+1:]
 
     def ensure_letter_integrity(self):
         # Reduce bad letters to only have unique letter to reduce redundancy
