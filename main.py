@@ -1,5 +1,9 @@
+import re
 from wordle import Wordle
 from game_gui import Game_GUI
+from guesser import Guesser
+import cProfile
+import pstats
 
 # qourdle_top_left = Wordle()
 # qourdle_top_left.add_bad_letters("")
@@ -30,6 +34,12 @@ from game_gui import Game_GUI
 # qourdle_bottom_right.solve()
 # print(f"Bottom Right{len(qourdle_bottom_right):6d}\t{qourdle_bottom_right}")
 
-game_boi = Game_GUI()
-game_boi.ask_which_game()
-game_boi.play_game()
+test_answers = Wordle().word_list
+test_guesses = re.split("\n", open("Allowable Guesses.txt").read())
+test_guesses = ["craig"]
+guesser = Guesser(test_answers, test_guesses)
+
+profile = cProfile.Profile()
+profile.runcall(guesser.sift_through_guesses)
+ps = pstats.Stats(profile)
+ps.print_stats()
