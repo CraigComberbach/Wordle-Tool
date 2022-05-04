@@ -36,7 +36,6 @@ import pstats
 
 test_answers = Wordle().word_list
 test_guesses = re.split("\n", open("Allowable Guesses.txt").read())
-test_guesses = ["craig"]
 guesser = Guesser(test_answers, test_guesses)
 
 profile = cProfile.Profile()
