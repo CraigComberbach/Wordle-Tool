@@ -14,6 +14,7 @@ class Wordle(object):
                               3: "",
                               4: ""}
         self.word_list = re.split("\n", open("Allowable Answers.txt").read())
+        self.guess_list = re.split("\n", open("Allowable Guesses.txt").read())
 
     def add_bad_letters(self, letters):
         for letter in list(letters):
@@ -28,31 +29,31 @@ class Wordle(object):
         for position, letter in letter_dictionary.items():
             self.known_letters[position] = letter
 
-    def must_have_letter_at_specific_location(self):
-        for index in reversed(range(0, len(self.word_list))):
+    def must_have_letter_at_specific_location(self, word_list):
+        for index in reversed(range(0, len(word_list))):
             for position, letter in self.known_letters.items():
                 pattern = self.make_five_letter_pattern_string(letter, position)
-                if re.search(pattern, self.word_list[index]) is None:
-                    self.word_list.pop(index)
+                if re.search(pattern, word_list[index]) is None:
+                    word_list.pop(index)
                     break
 
-    def only_include_valid_letters(self):
+    def only_include_valid_letters(self, word_list):
         for position, letter_list in self.good_letters.items():
             for letter in letter_list:
-                for index in reversed(range(0, len(self.word_list))):
+                for index in reversed(range(0, len(word_list))):
                     pattern = self.make_five_letter_pattern_string(letter, position)
 
                     # Remove word if the valid letter doesn't exist in the word at all or exists in an invalid location
-                    if re.search(letter, self.word_list[index]) is None \
-                        or re.search(pattern, self.word_list[index]) is not None \
+                    if re.search(letter, word_list[index]) is None \
+                        or re.search(pattern, word_list[index]) is not None \
                         and pattern != "....":
-                        self.word_list.pop(index)
+                        word_list.pop(index)
 
-    def remove_invalid_letters(self):
+    def remove_invalid_letters(self, word_list):
         for index in reversed(range(0, len(self.word_list))):
             for letter in self.bad_letters:
-                if re.search(letter, self.word_list[index]) is not None:
-                    self.word_list.pop(index)
+                if re.search(letter, word_list[index]) is not None:
+                    word_list.pop(index)
                     break
 
     def make_five_letter_pattern_string(self, letter, index):
@@ -75,10 +76,20 @@ class Wordle(object):
                 self.bad_letters.remove(letter)
 
     def solve(self):
+        self.solve_answers()
+        self.solve_guesses()
+
+    def solve_answers(self):
         self.ensure_letter_integrity()
-        self.remove_invalid_letters()
-        self.only_include_valid_letters()
-        self.must_have_letter_at_specific_location()
+        self.remove_invalid_letters(self.word_list)
+        self.only_include_valid_letters(self.word_list)
+        self.must_have_letter_at_specific_location(self.word_list)
+
+    def solve_guesses(self):
+        self.ensure_letter_integrity()
+        self.remove_invalid_letters(self.guess_list)
+        self.only_include_valid_letters(self.guess_list)
+        self.must_have_letter_at_specific_location(self.guess_list)
 
     def __str__(self):
         return f"{self.word_list}"

@@ -32,7 +32,7 @@ class Guesser(object):
                 model_game.add_good_letters({position: [word[position]]})
             else:
                 model_game.add_bad_letters(word[position])
-        model_game.solve()
+        model_game.solve_answers()
         return len(model_game) / self.denominator
 
     def create_and_initialize_game(self):
