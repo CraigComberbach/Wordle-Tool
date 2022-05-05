@@ -64,9 +64,9 @@ class Game_Space(object):
         self.answer_remaining_label = ttk.Label(master = self.frame,
                                                 text = f"{len(self.game)} valid answers remain")
         self.answer_box = tk.Text(master = self.frame,
-                                  wrap = tk.NONE,
-                                  width = 19,
-                                  height = 1)
+                                  wrap = tk.WORD,
+                                  width = 21,
+                                  height = 5)
         self.guess_entry.pack()
         self.buttons_frame.pack()
         self.solve_button.pack()
@@ -99,6 +99,8 @@ class Game_Space(object):
         bad_letters = ""
         good_letters = {}
         known_letters = {}
+
+        # Populate the bad/good/known letters into the solve engine
         for index in range(len(self.position_button)):
             if self.position_button[index]["background"] == "light gray":
                 bad_letters +=  self.position_button[index]["text"]
@@ -107,19 +109,25 @@ class Game_Space(object):
             else:
                 known_letters[index] =  self.position_button[index]["text"]
             self.position_button[index]["background"] = "light gray"
-
         self.game.add_bad_letters(bad_letters)
         self.game.add_good_letters(good_letters)
         self.game.add_known_letters(known_letters)
         self.game.solve()
 
+        # List all of the valid answers in the answer box
         self.answer_box["state"] = tk.NORMAL
         self.answer_box.delete("1.0", tk.END)
         self.answer_box.insert(tk.END, f"{self.game}")
         self.answer_box["state"] = tk.DISABLED
 
-        self.answer_remaining_label["text"] = f"{len(self.game)} valid answers remain"
+        # Update the number of remaining guesses label
+        if len(self.game) == 1:
+            text_to_display = f"1 valid answer remains"
+        else:
+            text_to_display = f"{len(self.game)} valid answers remain"
+        self.answer_remaining_label["text"] = text_to_display
 
+        # Clear the guess box and ready it to receive the next guess
         self.guess_entry.delete(0, tk.END)
         self.guess_entry.focus()
 
