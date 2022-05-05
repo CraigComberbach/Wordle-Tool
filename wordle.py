@@ -92,7 +92,10 @@ class Wordle(object):
         self.must_have_letter_at_specific_location(self.guess_list)
 
     def __str__(self):
-        return f"{self.word_list}"
+        list_of_answers = ""
+        for word in self.word_list:
+            list_of_answers += f"{word}, "
+        return list_of_answers
 
     def __len__(self):
         return len(self.word_list)
