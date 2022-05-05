@@ -1,4 +1,3 @@
-import re
 from wordle import Wordle
 from game_gui import Game_GUI
 from guesser import Guesser
@@ -34,10 +33,16 @@ import pstats
 # qourdle_bottom_right.solve()
 # print(f"Bottom Right{len(qourdle_bottom_right):6d}\t{qourdle_bottom_right}")
 
-test_answers = Wordle().word_list
-test_guesses = re.split("\n", open("Allowable Guesses.txt").read())
-guesser = Guesser(test_answers, test_guesses)
 
+game_boi = Game_GUI()
+game_boi.ask_which_game()
+game_boi.play_game()
+
+# Guesser Profiling
+test_answers = Wordle().word_list
+test_guesses = ["craig"]
+guesser = Guesser(test_answers, test_guesses)
+print("Expecting less then 8 seconds")
 profile = cProfile.Profile()
 profile.runcall(guesser.sift_through_guesses)
 ps = pstats.Stats(profile)
