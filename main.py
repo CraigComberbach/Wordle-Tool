@@ -7,6 +7,7 @@ from game_gui import Game_GUI
 # qourdle_top_left.add_known_letters({0:"",1:"",2:"",3:"",4:""})
 # qourdle_top_left.solve()
 # print(f"Top Left\t{len(qourdle_top_left):6d}\t{qourdle_top_left}")
+#Rebase Test
 #
 # qourdle_top_right = Wordle()
 # qourdle_top_right.add_bad_letters("")
