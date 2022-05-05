@@ -61,13 +61,16 @@ class Game_Space(object):
         self.solve_button = ttk.Button(master = self.frame,
                                        text = "Solve",
                                        command = self.solve_puzzle)
+        self.answer_remaining_label = ttk.Label(master = self.frame,
+                                                text = f"{len(self.game)} valid answers remain")
         self.answer_box = tk.Text(master = self.frame,
                                   wrap = tk.NONE,
                                   width = 19,
-                                  height = 2)
+                                  height = 1)
         self.guess_entry.pack()
         self.buttons_frame.pack()
         self.solve_button.pack()
+        self.answer_remaining_label.pack()
         self.answer_box.pack()
 
         self.position_button = []
@@ -112,8 +115,10 @@ class Game_Space(object):
 
         self.answer_box["state"] = tk.NORMAL
         self.answer_box.delete("1.0", tk.END)
-        self.answer_box.insert(tk.END, f"Words = {len(self.game)}\n{self.game}")
+        self.answer_box.insert(tk.END, f"{self.game}")
         self.answer_box["state"] = tk.DISABLED
+
+        self.answer_remaining_label["text"] = f"{len(self.game)} valid answers remain"
 
         self.guess_entry.delete(0, tk.END)
         self.guess_entry.focus()
