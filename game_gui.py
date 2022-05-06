@@ -67,11 +67,18 @@ class Game_Space(object):
                                   wrap = tk.WORD,
                                   width = 21,
                                   height = 5)
+        self.suggest_word_button = ttk.Button(master = self.frame,
+                                              text = "Suggest a word")
+        self.suggest_word_label = ttk.Label(master = self.frame,
+                                            text = "")
+
         self.guess_entry.pack()
         self.buttons_frame.pack()
         self.solve_button.pack()
         self.answer_remaining_label.pack()
         self.answer_box.pack()
+        self.suggest_word_button.pack()
+        self.suggest_word_label.pack()
 
         self.position_button = []
         for position in range(5):
