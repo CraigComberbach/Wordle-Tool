@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from wordle import Wordle
+from guesser import Guesser
 
 class Game_GUI(object):
     def __init__(self):
@@ -68,7 +69,8 @@ class Game_Space(object):
                                   width = 21,
                                   height = 5)
         self.suggest_word_button = ttk.Button(master = self.frame,
-                                              text = "Suggest a word")
+                                              command = self.suggest_a_word,
+                                              text = "Suggest'A'Word")
         self.suggest_word_label = ttk.Label(master = self.frame,
                                             text = "")
 
@@ -120,6 +122,9 @@ class Game_Space(object):
         self.game.add_good_letters(good_letters)
         self.game.add_known_letters(known_letters)
         self.game.solve()
+        print(f"Number of answer = {len(self.game.answer_list)}")
+        print(f"Number of answer = {len(self.game.guess_list)}")
+
 
         # List all of the valid answers in the answer box
         self.answer_box["state"] = tk.NORMAL
@@ -150,3 +155,8 @@ class Game_Space(object):
         while len(text.get()) > length:
             widget.delete(0)
         return text.get()
+
+    def suggest_a_word(self):
+        best_guess = Guesser(self.game.answer_list, self.game.guess_list)
+        best_word = best_guess.sift_through_guesses()
+        self.suggest_word_label["text"] = best_word

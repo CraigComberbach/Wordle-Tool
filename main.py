@@ -9,7 +9,7 @@ game_boi.play_game()
 # # Guesser Profiling
 # import cProfile
 # import pstats
-# test_answers = Wordle().word_list
+# test_answers = Wordle().answer_list
 # test_guesses = ["craig"]
 # guesser = Guesser(test_answers, test_guesses)
 # print("Expecting less then 8 seconds")

@@ -13,8 +13,8 @@ class Wordle(object):
                               2: "",
                               3: "",
                               4: ""}
-        self.word_list = re.split("\n", open("Allowable Answers.txt").read())
-        self.guess_list = re.split("\n", open("Allowable Guesses.txt").read())
+        self.answer_list = re.split("\n", open("Allowable Answers.txt").read())
+        self.guess_list = re.split("\n", open("Modified Allowable Guesses.txt").read())
 
     def add_bad_letters(self, letters):
         for letter in list(letters):
@@ -50,7 +50,7 @@ class Wordle(object):
                         word_list.pop(index)
 
     def remove_invalid_letters(self, word_list):
-        for index in reversed(range(0, len(self.word_list))):
+        for index in reversed(range(0, len(self.answer_list))):
             for letter in self.bad_letters:
                 if re.search(letter, word_list[index]) is not None:
                     word_list.pop(index)
@@ -81,9 +81,9 @@ class Wordle(object):
 
     def solve_answers(self):
         self.ensure_letter_integrity()
-        self.remove_invalid_letters(self.word_list)
-        self.only_include_valid_letters(self.word_list)
-        self.must_have_letter_at_specific_location(self.word_list)
+        self.remove_invalid_letters(self.answer_list)
+        self.only_include_valid_letters(self.answer_list)
+        self.must_have_letter_at_specific_location(self.answer_list)
 
     def solve_guesses(self):
         self.ensure_letter_integrity()
@@ -93,9 +93,9 @@ class Wordle(object):
 
     def __str__(self):
         list_of_answers = ""
-        for word in self.word_list:
+        for word in self.answer_list:
             list_of_answers += f"{word}, "
         return list_of_answers
 
     def __len__(self):
-        return len(self.word_list)
+        return len(self.answer_list)
