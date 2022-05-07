@@ -64,6 +64,8 @@ class Game_Space(object):
                                        command = self.solve_puzzle)
         self.answer_remaining_label = ttk.Label(master = self.frame,
                                                 text = f"{len(self.game)} valid answers remain")
+        self.guess_remaining_label = ttk.Label(master = self.frame,
+                                                text = f"{len(self.game.guess_list)} valid guesses remain")
         self.answer_box = tk.Text(master = self.frame,
                                   wrap = tk.WORD,
                                   width = 21,
@@ -78,6 +80,7 @@ class Game_Space(object):
         self.buttons_frame.pack()
         self.solve_button.pack()
         self.answer_remaining_label.pack()
+        self.guess_remaining_label.pack()
         self.answer_box.pack()
         self.suggest_word_button.pack()
         self.suggest_word_label.pack()
@@ -122,8 +125,8 @@ class Game_Space(object):
         self.game.add_good_letters(good_letters)
         self.game.add_known_letters(known_letters)
         self.game.solve()
-        print(f"Number of answer = {len(self.game.answer_list)}")
-        print(f"Number of answer = {len(self.game.guess_list)}")
+        print(f"{self.frame} Number of answer = {len(self.game.answer_list)}")
+        print(f"{self.frame} Number of guess = {len(self.game.guess_list)}")
 
 
         # List all of the valid answers in the answer box
@@ -132,12 +135,19 @@ class Game_Space(object):
         self.answer_box.insert(tk.END, f"{self.game}")
         self.answer_box["state"] = tk.DISABLED
 
-        # Update the number of remaining guesses label
+        # Update the number of remaining answers label
         if len(self.game) == 1:
             text_to_display = f"1 valid answer remains"
         else:
             text_to_display = f"{len(self.game)} valid answers remain"
         self.answer_remaining_label["text"] = text_to_display
+
+        # Update the number of remaining guesses label
+        if len(self.game) == 1:
+            text_to_display = f"1 valid guess remains"
+        else:
+            text_to_display = f"{len(self.game.guess_list)} valid guesses remain"
+        self.guess_remaining_label["text"] = text_to_display
 
         # Clear the guess box and ready it to receive the next guess
         self.guess_entry.delete(0, tk.END)
