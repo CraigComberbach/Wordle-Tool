@@ -67,9 +67,10 @@ class Wordle(object):
         # I am putting a greater weight on a good/known letter over a bad letter
         # The online game will mark a repeated good letter as a bad letter
         # eg woods will mark the first 'o' as good and the second 'o' as bad
-        for position, letter in self.good_letters.items():
-            if letter in self.bad_letters:
-                self.bad_letters.remove(letter)
+        for position, letters in self.good_letters.items():
+            for letter in letters:
+                if letter in self.bad_letters:
+                    self.bad_letters.remove(letter)
 
         for position, letter in self.known_letters.items():
             if letter in self.bad_letters:
