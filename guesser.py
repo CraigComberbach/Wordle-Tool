@@ -24,7 +24,8 @@ class Guesser(object):
                                 probability.append(self.probability_of_guess(test_postions, test_word))
             bits_o_info = self.calculate_information(probability)
             print(f"{test_word} has {bits_o_info} bits of information")
-            if bits_o_info > best_information:
+            if bits_o_info > best_information or \
+                    bits_o_info == best_information and test_word in self.guesses:
                 best_information = bits_o_info
                 best_word = test_word
         print(f"Best word is {best_word}")
