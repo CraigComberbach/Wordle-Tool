@@ -52,6 +52,7 @@ class Game_Space(object):
     def __init__(self, frame):
         self.frame = frame
         self.game = Wordle()
+        self.game.load_default_word_lists()
         self.guess_text = tk.StringVar()
         self.guess_text.trace_add("write", lambda unused1, unused2, unused3: self.update_buttons(self.guess_text))
         self.guess_entry = ttk.Entry(master = self.frame,
@@ -125,9 +126,6 @@ class Game_Space(object):
         self.game.add_good_letters(good_letters)
         self.game.add_known_letters(known_letters)
         self.game.solve()
-        print(f"{self.frame} Number of answer = {len(self.game.answer_list)}")
-        print(f"{self.frame} Number of guess = {len(self.game.guess_list)}")
-
 
         # List all of the valid answers in the answer box
         self.answer_box["state"] = tk.NORMAL

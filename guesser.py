@@ -46,9 +46,9 @@ class Guesser(object):
 
     def create_and_initialize_game(self):
         game = Wordle()
-        game.answer_list = []
         for word in self.answers:
             game.answer_list.append(word)
+
         return game
     
     def calculate_information(self, probability_array):

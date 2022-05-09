@@ -13,6 +13,10 @@ class Wordle(object):
                               2: "",
                               3: "",
                               4: ""}
+        self.answer_list = []
+        self.guess_list = []
+
+    def load_default_word_lists(self):
         self.answer_list = re.split("\n", open("Allowable Answers.txt").read())
         self.guess_list = re.split("\n", open("Modified Allowable Guesses.txt").read())
 

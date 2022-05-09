@@ -9,10 +9,11 @@ game_boi.play_game()
 # # Guesser Profiling
 # import cProfile
 # import pstats
-# test_answers = Wordle().answer_list
+# import re
+# test_answers = re.split("\n", open("Allowable Answers.txt").read())
 # test_guesses = ["craig"]
 # guesser = Guesser(test_answers, test_guesses)
-# print("Expecting less then 8 seconds")
+# print("Expecting less then 7 seconds")
 # profile = cProfile.Profile()
 # profile.runcall(guesser.sift_through_guesses)
 # ps = pstats.Stats(profile)
