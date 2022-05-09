@@ -33,36 +33,44 @@ class Wordle(object):
         for position, letter in letter_dictionary.items():
             self.known_letters[position] = letter
 
+    def any_letter_match(self, pattern_letter, word):
+        for letter in word:
+            if pattern_letter == letter:
+                return True
+        return False
+
+    def letter_at_specific_position_match(self, pattern_letter, position, word):
+        if pattern_letter == word[position]:
+            return True
+        else:
+            return False
+
     def must_have_letter_at_specific_location(self, word_list):
         for index in reversed(range(0, len(word_list))):
             for position, letter in self.known_letters.items():
-                pattern = self.make_five_letter_pattern_string(letter, position)
-                if re.search(pattern, word_list[index]) is None:
+                if letter == "":
+                    continue
+                if self.letter_at_specific_position_match(letter, position, word_list[index]) == False:
                     word_list.pop(index)
                     break
 
     def only_include_valid_letters(self, word_list):
         for position, letter_list in self.good_letters.items():
             for letter in letter_list:
+                if letter == "":
+                    continue
                 for index in reversed(range(0, len(word_list))):
-                    pattern = self.make_five_letter_pattern_string(letter, position)
-
                     # Remove word if the valid letter doesn't exist in the word at all or exists in an invalid location
-                    if re.search(letter, word_list[index]) is None \
-                        or re.search(pattern, word_list[index]) is not None \
-                        and pattern != "....":
+                    if self.any_letter_match(letter, word_list[index]) == False \
+                            or self.letter_at_specific_position_match(letter, position, word_list[index]) == True:
                         word_list.pop(index)
 
     def remove_invalid_letters(self, word_list):
-        for index in reversed(range(0, len(self.answer_list))):
+        for index in reversed(range(0, len(word_list))):
             for letter in self.bad_letters:
-                if re.search(letter, word_list[index]) is not None:
+                if self.any_letter_match(letter, word_list[index]) == True:
                     word_list.pop(index)
                     break
-
-    def make_five_letter_pattern_string(self, letter, index):
-        pattern = "....."
-        return pattern[:index] + letter + pattern[index+1:]
 
     def ensure_letter_integrity(self):
         # Reduce bad letters to only have unique letter to reduce redundancy

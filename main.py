@@ -13,7 +13,7 @@ game_boi.play_game()
 # test_answers = re.split("\n", open("Allowable Answers.txt").read())
 # test_guesses = ["craig"]
 # guesser = Guesser(test_answers, test_guesses)
-# print("Expecting less then 7 seconds")
+# print("Expecting less then 2.5 seconds")
 # profile = cProfile.Profile()
 # profile.runcall(guesser.sift_through_guesses)
 # ps = pstats.Stats(profile)
