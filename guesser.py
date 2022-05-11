@@ -1,6 +1,8 @@
 import math
 import re
 from wordle import Wordle
+from operator import itemgetter
+
 
 class Guesser(object):
     def __init__(self, answers, guesses):
@@ -10,7 +12,7 @@ class Guesser(object):
 
     def sift_through_guesses(self):
         guess_type = ["Known", "Good", "Bad"]
-        best_word = ""
+        best_word = []
         best_information = 0
 
         for index, test_word in enumerate(self.guesses):
@@ -23,13 +25,16 @@ class Guesser(object):
                                 test_postions = [position1, position2, position3, position4, position5]
                                 probability.append(self.probability_of_guess(test_postions, test_word))
             bits_o_info = self.calculate_information(probability)
-            print(f"{test_word} has {bits_o_info} bits of information")
-            if bits_o_info > best_information or \
-                    bits_o_info == best_information and test_word in self.guesses:
-                best_information = bits_o_info
-                best_word = test_word
-        print(f"Best word is {best_word}")
-        return best_word
+            best_word.append({"Word":test_word, "Info":bits_o_info})
+
+        best_word = sorted(best_word, key = itemgetter("Info"), reverse = True)
+        best_word_list = ""
+        for index, word in enumerate(best_word):
+            print(f"{word['Word']}\t{word['Info']}")
+            if index < 5:
+                best_word_list += f"{word['Word']} "
+        print("\n")
+        return best_word_list
 
     def probability_of_guess(self, positions, word):
         model_game = self.create_and_initialize_game()
