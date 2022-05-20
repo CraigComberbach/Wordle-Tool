@@ -8,6 +8,7 @@ class Game_GUI(object):
         self.window = tk.Tk()
         self.frame = []
         self.game = []
+        self.play_area_frame = ttk.Frame(master = self.window)
 
     def ask_which_game(self):
         for widget in self.window.grid_slaves():
@@ -33,23 +34,55 @@ class Game_GUI(object):
 
     def wordle_game(self):
         self.clean_screen("Wordle Solver")
-        self.make_game_frame(0, 0)
+        self.make_game_frame(0, 0, shared = False)
+        self.play_area_frame.pack()
 
     def quordle_game(self):
         self.clean_screen("Quorlde Solver")
+        self.main_guess_text = tk.StringVar()
+        self.main_guess_text.trace_add("write", lambda unused1, unused2, unused3: self.main_update_buttons(self.main_guess_text))
+        self.main_guess_entry = ttk.Entry(master = self.window,
+                                     textvariable = self.main_guess_text,
+                                     justify = "center",
+                                     width = 7)
+        self.main_solve_button = ttk.Button(master = self.window,
+                                            text = "Solve All",
+                                            command = self.solve_all_puzzles)
+        self.main_guess_entry.pack()
+        self.main_solve_button.pack()
+        self.play_area_frame.pack()
+
         for vertical in range(2):
             for horizontal in range(2):
-                self.make_game_frame(horizontal, vertical)
+                self.make_game_frame(horizontal, vertical, shared = True)
 
-    def make_game_frame(self, horizontal, vertical):
-        self.frame.append(ttk.Frame(self.window,
+    def make_game_frame(self, horizontal, vertical, shared):
+        self.frame.append(ttk.Frame(self.play_area_frame,
                                     borderwidth = 5,
                                     relief = tk.GROOVE))
         self.frame[len(self.game)].grid(column = horizontal, row = vertical)
-        self.game.append(Game_Space(self.frame[len(self.game)]))
+        self.game.append(Game_Space(self.frame[len(self.game)], shared))
+
+    def main_update_buttons(self, textable):
+        content = self.main_limit_text_length(self.main_guess_entry, textable, 5)
+        for game_instance in self.game:
+            for index in range(len(game_instance.position_button)):
+                if index < len(content):
+                    game_instance.position_button[index]["text"] = content[index]
+                else:
+                    game_instance.position_button[index]["text"] = ""
+
+    def main_limit_text_length(self, widget, text, length = 5):
+        while len(text.get()) > length:
+            widget.delete(0)
+        return text.get()
+
+    def solve_all_puzzles(self):
+        for game_instance in self.game:
+            game_instance.solve_puzzle()
 
 class Game_Space(object):
-    def __init__(self, frame):
+    def __init__(self, frame, shared):
         self.frame = frame
         self.game = Wordle()
         self.game.load_default_word_lists()
@@ -77,9 +110,11 @@ class Game_Space(object):
         self.suggest_word_label = ttk.Label(master = self.frame,
                                             text = "")
 
-        self.guess_entry.pack()
+        if shared == False:
+            self.guess_entry.pack()
         self.buttons_frame.pack()
-        self.solve_button.pack()
+        if shared == False:
+            self.solve_button.pack()
         self.answer_remaining_label.pack()
         self.guess_remaining_label.pack()
         self.answer_box.pack()
@@ -148,8 +183,8 @@ class Game_Space(object):
         self.guess_remaining_label["text"] = text_to_display
 
         # Clear the guess box and ready it to receive the next guess
-        self.guess_entry.delete(0, tk.END)
-        self.guess_entry.focus()
+        # self.guess_entry.delete(0, tk.END)
+        # self.guess_entry.focus()
 
     def update_buttons(self, textable):
         content = self.limit_text_length(self.guess_entry, textable, 5)
