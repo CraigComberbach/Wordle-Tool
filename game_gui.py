@@ -42,9 +42,9 @@ class Game_GUI(object):
         self.main_guess_text = tk.StringVar()
         self.main_guess_text.trace_add("write", lambda unused1, unused2, unused3: self.main_update_buttons(self.main_guess_text))
         self.main_guess_entry = ttk.Entry(master = self.window,
-                                     textvariable = self.main_guess_text,
-                                     justify = "center",
-                                     width = 7)
+                                          textvariable = self.main_guess_text,
+                                          justify = "center",
+                                          width = 7)
         self.main_solve_button = ttk.Button(master = self.window,
                                             text = "Solve All",
                                             command = self.solve_all_puzzles)
