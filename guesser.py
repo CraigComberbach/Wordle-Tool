@@ -29,11 +29,13 @@ class Guesser(object):
 
         best_word = sorted(best_word, key = itemgetter("Info"), reverse = True)
         best_word_list = ""
-        for index, word in enumerate(best_word):
+        for index, word in enumerate(reversed(best_word)):
             print(f"{word['Word']}\t{word['Info']}")
-            if index < 5:
-                best_word_list += f"{word['Word']} "
         print("\n")
+
+        for index in range(5):
+            if index < len(best_word):
+                best_word_list += f"{best_word[index]['Word']} "
         return best_word_list
 
     def probability_of_guess(self, positions, word):
