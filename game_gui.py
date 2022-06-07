@@ -48,9 +48,16 @@ class Game_GUI(object):
         self.main_solve_button = ttk.Button(master = self.window,
                                             text = "Solve All",
                                             command = self.solve_all_puzzles)
+        self.main_suggest_word_button = ttk.Button(master = self.window,
+                                                   text = "Suggest'A'Word (all)",
+                                                   command = self.guess_all_puzzles)
+        self.main_suggest_word_label = ttk.Label(master = self.window,
+                                                 text = "")
         self.main_guess_entry.pack()
         self.main_solve_button.pack()
         self.play_area_frame.pack()
+        self.main_suggest_word_button.pack()
+        self.main_suggest_word_label.pack()
 
         for vertical in range(2):
             for horizontal in range(2):
@@ -80,6 +87,18 @@ class Game_GUI(object):
     def solve_all_puzzles(self):
         for game_instance in self.game:
             game_instance.solve_puzzle()
+
+    def guess_all_puzzles(self):
+        answer_list = []
+        guess_list = []
+        for instance in self.game:
+            answer_list.extend(instance.game.answer_list)
+            guess_list.extend(instance.game.guess_list)
+        answer_list = set(answer_list)
+        guess_list = set(guess_list)
+        best_guess = Guesser(answer_list, guess_list)
+        best_word = best_guess.sift_through_guesses()
+        self.main_suggest_word_label["text"] = best_word
 
 class Game_Space(object):
     def __init__(self, frame, shared):
@@ -183,7 +202,6 @@ class Game_Space(object):
         self.guess_remaining_label["text"] = text_to_display
 
         # Clear the guess box and ready it to receive the next guess
-        # self.guess_entry.delete(0, tk.END)
         # self.guess_entry.focus()
 
     def update_buttons(self, textable):
