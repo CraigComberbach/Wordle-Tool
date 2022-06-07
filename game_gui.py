@@ -87,6 +87,8 @@ class Game_GUI(object):
     def solve_all_puzzles(self):
         for game_instance in self.game:
             game_instance.solve_puzzle()
+        self.main_guess_entry.delete(0, tk.END)
+        self.main_guess_entry.focus()
 
     def guess_all_puzzles(self):
         answer_list = []
@@ -202,7 +204,8 @@ class Game_Space(object):
         self.guess_remaining_label["text"] = text_to_display
 
         # Clear the guess box and ready it to receive the next guess
-        # self.guess_entry.focus()
+        self.guess_entry.delete(0, tk.END)
+        self.guess_entry.focus()
 
     def update_buttons(self, textable):
         content = self.limit_text_length(self.guess_entry, textable, 5)
