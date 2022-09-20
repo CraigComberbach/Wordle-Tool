@@ -23,6 +23,10 @@ class Game_GUI(object):
             text = "Quordle",
             command = self.quordle_game
         ).grid(column = 1, row = 0)
+        octordle_button = ttk.Button(
+            text = "Octordle",
+            command = self.octordle_game
+        ).grid(column = 2, row = 0)
 
     def play_game(self):
         self.window.mainloop()
@@ -60,6 +64,32 @@ class Game_GUI(object):
         self.main_suggest_word_label.pack()
 
         for vertical in range(2):
+            for horizontal in range(2):
+                self.make_game_frame(horizontal, vertical, shared = True)
+
+    def octordle_game(self):
+        self.clean_screen("Octorlde Solver")
+        self.main_guess_text = tk.StringVar()
+        self.main_guess_text.trace_add("write", lambda unused1, unused2, unused3: self.main_update_buttons(self.main_guess_text))
+        self.main_guess_entry = ttk.Entry(master = self.window,
+                                          textvariable = self.main_guess_text,
+                                          justify = "center",
+                                          width = 7)
+        self.main_solve_button = ttk.Button(master = self.window,
+                                            text = "Solve All",
+                                            command = self.solve_all_puzzles)
+        self.main_suggest_word_button = ttk.Button(master = self.window,
+                                                   text = "Suggest'A'Word (all)",
+                                                   command = self.guess_all_puzzles)
+        self.main_suggest_word_label = ttk.Label(master = self.window,
+                                                 text = "")
+        self.main_guess_entry.pack()
+        self.main_solve_button.pack()
+        self.play_area_frame.pack()
+        self.main_suggest_word_button.pack()
+        self.main_suggest_word_label.pack()
+
+        for vertical in range(4):
             for horizontal in range(2):
                 self.make_game_frame(horizontal, vertical, shared = True)
 
