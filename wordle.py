@@ -13,7 +13,12 @@ class Wordle(object):
                               2: "",
                               3: "",
                               4: ""}
-        self.word_list = re.split("\n", open("Allowable Answers.txt").read())
+        self.answer_list = []
+        self.guess_list = []
+
+    def load_default_word_lists(self):
+        self.answer_list = re.split("\n", open("Allowable Answers.txt").read())
+        self.guess_list = re.split("\n", open("Modified Allowable Guesses.txt").read())
 
     def add_bad_letters(self, letters):
         for letter in list(letters):
@@ -28,54 +33,82 @@ class Wordle(object):
         for position, letter in letter_dictionary.items():
             self.known_letters[position] = letter
 
-    def must_have_letter_at_specific_location(self):
-        for index in reversed(range(0, len(self.word_list))):
+    def any_letter_match(self, pattern_letter, word):
+        for letter in word:
+            if pattern_letter == letter:
+                return True
+        return False
+
+    def letter_at_specific_position_match(self, pattern_letter, position, word):
+        if pattern_letter == word[position]:
+            return True
+        else:
+            return False
+
+    def must_have_letter_at_specific_location(self, word_list):
+        for index in reversed(range(0, len(word_list))):
             for position, letter in self.known_letters.items():
-                pattern = self.make_five_letter_pattern_string(letter, position)
-                if re.search(pattern, self.word_list[index]) is None:
-                    self.word_list.remove(self.word_list[index])
+                if letter == "":
+                    continue
+                if self.letter_at_specific_position_match(letter, position, word_list[index]) == False:
+                    word_list.pop(index)
                     break
 
-    def only_include_valid_letters(self):
+    def only_include_valid_letters(self, word_list):
         for position, letter_list in self.good_letters.items():
             for letter in letter_list:
-                for index in reversed(range(0, len(self.word_list))):
-                    pattern = self.make_five_letter_pattern_string(letter, position)
-
+                if letter == "":
+                    continue
+                for index in reversed(range(0, len(word_list))):
                     # Remove word if the valid letter doesn't exist in the word at all or exists in an invalid location
-                    if re.search(letter, self.word_list[index]) is None \
-                        or re.search(pattern, self.word_list[index]) is not None \
-                        and pattern != ".....":
-                        self.word_list.remove(self.word_list[index])
+                    if self.any_letter_match(letter, word_list[index]) == False \
+                            or self.letter_at_specific_position_match(letter, position, word_list[index]) == True:
+                        word_list.pop(index)
 
-
-    def remove_invalid_letters(self):
-        for index in reversed(range(0, len(self.word_list))):
+    def remove_invalid_letters(self, word_list):
+        for index in reversed(range(0, len(word_list))):
             for letter in self.bad_letters:
-                if re.search(letter, self.word_list[index]) is not None:
-                    self.word_list.remove(self.word_list[index])
+                if self.any_letter_match(letter, word_list[index]) == True:
+                    word_list.pop(index)
                     break
 
-    def make_five_letter_pattern_string(self, letter, index):
-        pattern_string = ""
-        for position in range(index):
-            pattern_string += "."
-        pattern_string += letter
-        for position in range(5 - len(pattern_string)):
-            pattern_string += "."
-        return pattern_string
+    def ensure_letter_integrity(self):
+        # Reduce bad letters to only have unique letter to reduce redundancy
+        self.bad_letters = list(set(self.bad_letters))
+
+        # I am putting a greater weight on a good/known letter over a bad letter
+        # The online game will mark a repeated good letter as a bad letter
+        # eg woods will mark the first 'o' as good and the second 'o' as bad
+        for position, letters in self.good_letters.items():
+            for letter in letters:
+                if letter in self.bad_letters:
+                    self.bad_letters.remove(letter)
+
+        for position, letter in self.known_letters.items():
+            if letter in self.bad_letters:
+                self.bad_letters.remove(letter)
 
     def solve(self):
-        # print(f"Initial Word List ({len(self.word_list)})\t{self.word_list}")
-        self.must_have_letter_at_specific_location()
-        # print(f"Known Letters Only ({len(self.word_list)})\t{self.word_list}")
-        self.only_include_valid_letters()
-        # print(f"Valid Letters Only ({len(self.word_list)})\t\t{self.word_list}")
-        self.remove_invalid_letters()
-        # print(f"Remove Invalid Letters ({len(self.word_list)})\t{self.word_list}")
+        self.solve_answers()
+        self.solve_guesses()
+
+    def solve_answers(self):
+        self.ensure_letter_integrity()
+        self.remove_invalid_letters(self.answer_list)
+        self.only_include_valid_letters(self.answer_list)
+        self.must_have_letter_at_specific_location(self.answer_list)
+
+    def solve_guesses(self):
+        self.ensure_letter_integrity()
+        self.remove_invalid_letters(self.guess_list)
+        self.only_include_valid_letters(self.guess_list)
+        self.must_have_letter_at_specific_location(self.guess_list)
 
     def __str__(self):
-        return f"{self.word_list}"
+        list_of_answers = ""
+        for word in self.answer_list:
+            list_of_answers += f"{word}, "
+        return list_of_answers
 
     def __len__(self):
-        return len(self.word_list)
+        return len(self.answer_list)
