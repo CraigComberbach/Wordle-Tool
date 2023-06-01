@@ -53,7 +53,7 @@ class Guesser(object):
 
     def create_and_initialize_game(self):
         game = Wordle()
-        game.answer_list = list(self.answers)
+        game.load_default_word_lists()
 
         return game
     
